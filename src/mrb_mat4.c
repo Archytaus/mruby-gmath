@@ -122,6 +122,27 @@ mat4_is_identity(mrb_state *mrb, mrb_value self)
     value->f44 == mat4_identity_const.f44);
 }
 
+
+mrb_value 
+mat4_inspect(mrb_state* mrb, mrb_value self)
+{
+  char buf[256];
+  int len;
+
+  mat4* selfValue = mat4_get_ptr(mrb, self);
+
+  if (!selfValue) return mrb_nil_value();
+
+  len = snprintf(buf, sizeof(buf), 
+    "[%.4f,%.4f,%.4f,%.4f][%.4f,%.4f,%.4f,%.4f][%.4f,%.4f,%.4f,%.4f][%.4f,%.4f,%.4f,%.4f]",
+    selfValue->f11, selfValue->f12, selfValue->f13, selfValue->f14,
+    selfValue->f21, selfValue->f22, selfValue->f23, selfValue->f24,
+    selfValue->f31, selfValue->f32, selfValue->f33, selfValue->f34,
+    selfValue->f41, selfValue->f42, selfValue->f43, selfValue->f44);
+
+  return mrb_str_new(mrb, buf, len);
+}
+
 void init_mat4(mrb_state* mrb)
 {
   mrb_mat4_class = mrb_define_class(mrb, "Mat4", mrb->object_class);
@@ -131,6 +152,7 @@ void init_mat4(mrb_state* mrb)
 
   mrb_define_method(mrb, mrb_mat4_class, "initialize", mat4_initialize, ARGS_ANY());
   mrb_define_method(mrb, mrb_mat4_class, "identity?", mat4_is_identity, ARGS_NONE());
-  // mrb_define_method(mrb, mrb_mat4_class, "to_s", vec2_inspect, ARGS_NONE());
-  // mrb_define_method(mrb, mrb_mat4_class, "inspect", vec2_inspect, ARGS_NONE());
+
+  mrb_define_method(mrb, mrb_mat4_class, "to_s", mat4_inspect, ARGS_NONE());
+  mrb_define_method(mrb, mrb_mat4_class, "inspect", mat4_inspect, ARGS_NONE());
 }
