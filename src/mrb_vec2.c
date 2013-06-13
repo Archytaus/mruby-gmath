@@ -344,29 +344,41 @@ mrb_value vec2_length(mrb_state* mrb, mrb_value self)
   return mrb_float_value(vec2_calc_length(selfValue));
 }
 
-// mrb_value vec2_distance(mrb_state* mrb, mrb_value self)
-// {
-//   mrb_value new_value;
-//   int args = mrb_get_args(mrb, "o", &new_value);
-//   vec2* arg =(struct vec2*)mrb_data_get_ptr(mrb, new_value, &vec2_type);
-//   vec2* selfValue = (struct vec2*)mrb_data_get_ptr(mrb, self, &vec2_type);
+mrb_float vec2_calc_distance(struct vec2* vector, struct vec2* other)
+{
+  mrb_float x_diff = vector->x - other->x;
+  mrb_float y_diff = vector->y - other->y;
+  return sqrt((x_diff * x_diff) + (y_diff * y_diff));
+}
 
-//   if (!arg) return mrb_nil_value();
+mrb_value vec2_distance(mrb_state* mrb, mrb_value self)
+{
+  mrb_value new_value;
+  int args = mrb_get_args(mrb, "o", &new_value);
+  struct vec2* arg =(struct vec2*)mrb_data_get_ptr(mrb, new_value, &vec2_type);
+  struct vec2* selfValue = (struct vec2*)mrb_data_get_ptr(mrb, self, &vec2_type);
 
-//   return mrb_float_value(glm::distance(*selfValue->vector, *arg->vector));
-// }
+  if (!arg) return mrb_nil_value();
 
-// mrb_value vec2_dot(mrb_state* mrb, mrb_value self)
-// {
-//   mrb_value new_value;
-//   int args = mrb_get_args(mrb, "o", &new_value);
-//   vec2* arg =(struct vec2*)mrb_data_get_ptr(mrb, new_value, &vec2_type);
-//   vec2* selfValue = (struct vec2*)mrb_data_get_ptr(mrb, self, &vec2_type);
+  return mrb_float_value(vec2_calc_distance(selfValue, arg));
+}
 
-//   if (!arg) return mrb_nil_value();
+mrb_float vec2_calc_dot(struct vec2* vector, struct vec2* other)
+{
+  return (vector->x * other->x) + (vector->y * other->y);
+}
 
-//   return mrb_float_value(glm::dot(*selfValue->vector, *arg->vector));
-// }
+mrb_value vec2_dot(mrb_state* mrb, mrb_value self)
+{
+  mrb_value new_value;
+  int args = mrb_get_args(mrb, "o", &new_value);
+  struct vec2* arg =(struct vec2*)mrb_data_get_ptr(mrb, new_value, &vec2_type);
+  struct vec2* selfValue = (struct vec2*)mrb_data_get_ptr(mrb, self, &vec2_type);
+
+  if (!arg) return mrb_nil_value();
+
+  return mrb_float_value(vec2_calc_dot(selfValue, arg));
+}
 
 mrb_value vec2_inspect(mrb_state* mrb, mrb_value self)
 {
@@ -417,8 +429,8 @@ void init_vec2(mrb_state* mrb)
 
   mrb_define_method(mrb, mrb_vec2_class, "length", vec2_length, ARGS_NONE());
 
-  // mrb_define_method(mrb, mrb_vec2_class, "dot", vec2_dot, ARGS_REQ(1));
-  // mrb_define_method(mrb, mrb_vec2_class, "distance_to", vec2_distance, ARGS_REQ(1));
+  mrb_define_method(mrb, mrb_vec2_class, "dot", vec2_dot, ARGS_REQ(1));
+  mrb_define_method(mrb, mrb_vec2_class, "distance_to", vec2_distance, ARGS_REQ(1));
 
   mrb_define_method(mrb, mrb_vec2_class, "==", vec2_equals, ARGS_REQ(1));
 
