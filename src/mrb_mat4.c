@@ -46,8 +46,6 @@ create_new_mat4_identity(mrb_state* mrb)
 mrb_value 
 mat4_initialize(mrb_state *mrb, mrb_value self)
 {
-  mrb_float x, y;
-  int n;
   struct mat4 *tm;
 
   tm = (struct mat4*)DATA_PTR(self);
@@ -61,6 +59,114 @@ mat4_initialize(mrb_state *mrb, mrb_value self)
 
   DATA_PTR(self) = tm;
   return self;
+}
+
+mrb_value
+mat4_get_f11(mrb_state* mrb, mrb_value self) {
+  mat4* value = mat4_get_ptr(mrb, self);
+  return mrb_float_value(value->f11);
+}
+
+mrb_value
+mat4_get_f12(mrb_state* mrb, mrb_value self) {
+  mat4* value = mat4_get_ptr(mrb, self);
+  return mrb_float_value(value->f12);
+}
+
+mrb_value
+mat4_get_f13(mrb_state* mrb, mrb_value self) {
+  mat4* value = mat4_get_ptr(mrb, self);
+  return mrb_float_value(value->f13);
+}
+
+mrb_value
+mat4_get_f14(mrb_state* mrb, mrb_value self) {
+  mat4* value = mat4_get_ptr(mrb, self);
+  return mrb_float_value(value->f14);
+}
+
+mrb_value
+mat4_get_f21(mrb_state* mrb, mrb_value self) {
+  mat4* value = mat4_get_ptr(mrb, self);
+  return mrb_float_value(value->f21);
+}
+
+mrb_value
+mat4_get_f22(mrb_state* mrb, mrb_value self) {
+  mat4* value = mat4_get_ptr(mrb, self);
+  return mrb_float_value(value->f22);
+}
+
+mrb_value
+mat4_get_f23(mrb_state* mrb, mrb_value self) {
+  mat4* value = mat4_get_ptr(mrb, self);
+  return mrb_float_value(value->f23);
+}
+
+mrb_value
+mat4_get_f24(mrb_state* mrb, mrb_value self) {
+  mat4* value = mat4_get_ptr(mrb, self);
+  return mrb_float_value(value->f24);
+}
+
+mrb_value
+mat4_get_f31(mrb_state* mrb, mrb_value self) {
+  mat4* value = mat4_get_ptr(mrb, self);
+  return mrb_float_value(value->f31);
+}
+
+mrb_value
+mat4_get_f32(mrb_state* mrb, mrb_value self) {
+  mat4* value = mat4_get_ptr(mrb, self);
+  return mrb_float_value(value->f32);
+}
+
+mrb_value
+mat4_get_f33(mrb_state* mrb, mrb_value self) {
+  mat4* value = mat4_get_ptr(mrb, self);
+  return mrb_float_value(value->f33);
+}
+
+mrb_value
+mat4_get_f34(mrb_state* mrb, mrb_value self) {
+  mat4* value = mat4_get_ptr(mrb, self);
+  return mrb_float_value(value->f34);
+}
+
+mrb_value
+mat4_get_f41(mrb_state* mrb, mrb_value self) {
+  mat4* value = mat4_get_ptr(mrb, self);
+  return mrb_float_value(value->f41);
+}
+
+mrb_value
+mat4_get_f42(mrb_state* mrb, mrb_value self) {
+  mat4* value = mat4_get_ptr(mrb, self);
+  return mrb_float_value(value->f42);
+}
+
+mrb_value
+mat4_get_f43(mrb_state* mrb, mrb_value self) {
+  mat4* value = mat4_get_ptr(mrb, self);
+  return mrb_float_value(value->f43);
+}
+
+mrb_value
+mat4_get_f44(mrb_state* mrb, mrb_value self) {
+  mat4* value = mat4_get_ptr(mrb, self);
+  return mrb_float_value(value->f44);
+}
+
+mrb_value 
+mat4_set_f11(mrb_state* mrb, mrb_value self)
+{
+  mrb_value new_value;
+  mrb_get_args(mrb, "f", &new_value);
+
+  mat4* value = mat4_get_ptr(mrb, self);
+  value->f11 = mrb_float(new_value);
+
+  return new_value;
 }
 
 mrb_value 
@@ -155,4 +261,29 @@ void init_mat4(mrb_state* mrb)
 
   mrb_define_method(mrb, mrb_mat4_class, "to_s", mat4_inspect, ARGS_NONE());
   mrb_define_method(mrb, mrb_mat4_class, "inspect", mat4_inspect, ARGS_NONE());
+
+  mrb_define_method(mrb, mrb_mat4_class, "f11", mat4_get_f11, ARGS_NONE());
+  mrb_define_method(mrb, mrb_mat4_class, "f12", mat4_get_f12, ARGS_NONE());
+  mrb_define_method(mrb, mrb_mat4_class, "f13", mat4_get_f13, ARGS_NONE());
+  mrb_define_method(mrb, mrb_mat4_class, "f14", mat4_get_f14, ARGS_NONE());
+
+  mrb_define_method(mrb, mrb_mat4_class, "f21", mat4_get_f21, ARGS_NONE());
+  mrb_define_method(mrb, mrb_mat4_class, "f22", mat4_get_f22, ARGS_NONE());
+  mrb_define_method(mrb, mrb_mat4_class, "f23", mat4_get_f23, ARGS_NONE());
+  mrb_define_method(mrb, mrb_mat4_class, "f24", mat4_get_f24, ARGS_NONE());
+
+  mrb_define_method(mrb, mrb_mat4_class, "f31", mat4_get_f31, ARGS_NONE());
+  mrb_define_method(mrb, mrb_mat4_class, "f32", mat4_get_f32, ARGS_NONE());
+  mrb_define_method(mrb, mrb_mat4_class, "f33", mat4_get_f33, ARGS_NONE());
+  mrb_define_method(mrb, mrb_mat4_class, "f34", mat4_get_f34, ARGS_NONE());
+
+  mrb_define_method(mrb, mrb_mat4_class, "f41", mat4_get_f41, ARGS_NONE());
+  mrb_define_method(mrb, mrb_mat4_class, "f42", mat4_get_f42, ARGS_NONE());
+  mrb_define_method(mrb, mrb_mat4_class, "f43", mat4_get_f43, ARGS_NONE());
+  mrb_define_method(mrb, mrb_mat4_class, "f44", mat4_get_f44, ARGS_NONE());
+
+  // mrb_define_method(mrb, mrb_vec2_class, "+", vec2_plus, ARGS_REQ(1));
+  // mrb_define_method(mrb, mrb_vec2_class, "add", vec2_plus, ARGS_REQ(1));
+  // mrb_define_method(mrb, mrb_vec2_class, "add!", vec2_plus_inplace, ARGS_REQ(1));
+
 }
