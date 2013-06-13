@@ -1,5 +1,7 @@
 #include "mrb_vec2.h"
 
+#include <math.h>
+
 #include <mruby.h>
 #include <mruby/class.h>
 #include <mruby/data.h>
@@ -309,28 +311,38 @@ mrb_value vec2_initialize(mrb_state *mrb, mrb_value self)
   return self;
 }
 
-// mrb_value vec2_normalize(mrb_state* mrb, mrb_value self)
-// {
-//   vec2* selfValue = (struct vec2*)mrb_data_get_ptr(mrb, self, &vec2_type);
-//   vec2* result = new vec2(glm::normalize(*selfValue->vector));
+mrb_float vec2_calc_length(struct vec2* vector)
+{
+  return sqrt((vector->x * vector->x) + (vector->y * vector->y));
+}
 
-//   return vec2_wrap(mrb, mrb_vec2_class, result);
-// }
+mrb_value vec2_normalize(mrb_state* mrb, mrb_value self)
+{
+  struct vec2* selfValue = (struct vec2*)mrb_data_get_ptr(mrb, self, &vec2_type);
+  mrb_float length = vec2_calc_length(selfValue);
 
-// mrb_value vec2_normalize_inplace(mrb_state* mrb, mrb_value self)
-// {
-//   vec2* selfValue = (struct vec2*)mrb_data_get_ptr(mrb, self, &vec2_type);
-//   *selfValue->vector = glm::normalize(*selfValue->vector);
+  return wrap_new_vec2(mrb, 
+    selfValue->x / length,
+    selfValue->y / length);
+}
 
-//   return self;
-// }
+mrb_value vec2_normalize_inplace(mrb_state* mrb, mrb_value self)
+{
+  struct vec2* selfValue = (struct vec2*)mrb_data_get_ptr(mrb, self, &vec2_type);
+  
+  mrb_float length = vec2_calc_length(selfValue);
+  selfValue->x /= length;
+  selfValue->y /= length;
+  
+  return self;
+}
 
-// mrb_value vec2_length(mrb_state* mrb, mrb_value self)
-// {
-//   vec2* selfValue = (struct vec2*)mrb_data_get_ptr(mrb, self, &vec2_type);
+mrb_value vec2_length(mrb_state* mrb, mrb_value self)
+{
+  struct vec2* selfValue = (struct vec2*)mrb_data_get_ptr(mrb, self, &vec2_type);
 
-//   return mrb_float_value(glm::length(*selfValue->vector));
-// }
+  return mrb_float_value(vec2_calc_length(selfValue));
+}
 
 // mrb_value vec2_distance(mrb_state* mrb, mrb_value self)
 // {
@@ -400,10 +412,10 @@ void init_vec2(mrb_state* mrb)
   mrb_define_method(mrb, mrb_vec2_class, "divide", vec2_divide, ARGS_REQ(1));
   mrb_define_method(mrb, mrb_vec2_class, "divide!", vec2_divide_inplace, ARGS_REQ(1));
 
-  // mrb_define_method(mrb, mrb_vec2_class, "normalize", vec2_normalize, ARGS_NONE());
-  // mrb_define_method(mrb, mrb_vec2_class, "normalize!", vec2_normalize_inplace, ARGS_NONE());
+  mrb_define_method(mrb, mrb_vec2_class, "normalize", vec2_normalize, ARGS_NONE());
+  mrb_define_method(mrb, mrb_vec2_class, "normalize!", vec2_normalize_inplace, ARGS_NONE());
 
-  // mrb_define_method(mrb, mrb_vec2_class, "length", vec2_length, ARGS_NONE());
+  mrb_define_method(mrb, mrb_vec2_class, "length", vec2_length, ARGS_NONE());
 
   // mrb_define_method(mrb, mrb_vec2_class, "dot", vec2_dot, ARGS_REQ(1));
   // mrb_define_method(mrb, mrb_vec2_class, "distance_to", vec2_distance, ARGS_REQ(1));

@@ -146,16 +146,15 @@ assert 'length' do
   value == 3
 end
 
-assert 'distance' do
-  value = Vec2.new(3).distance_to(Vec2.new(3, 6))
-  value == 3
-end
+# assert 'distance' do
+#   value = Vec2.new(3).distance_to(Vec2.new(3, 6))
+#   value == 3
+# end
 
-assert 'dot' do
-  value = Vec2.new(3).dot(Vec2.new(3, 4))
-  value == 21
-end
-
+# assert 'dot' do
+#   value = Vec2.new(3).dot(Vec2.new(3, 4))
+#   value == 21
+# end
 
 assert 'memory allocation' do
   after_obj_count = {}
