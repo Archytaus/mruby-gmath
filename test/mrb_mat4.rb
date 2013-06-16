@@ -62,3 +62,33 @@ assert 'add' do
 
   assert_equal expected, value
 end
+
+assert 'orthogonal' do
+  value = Mat4.orthogonal(0, 10, 0, 10, -1, 1)
+  expected = Mat4.new(
+    [0.2, 0, 0, -1],
+    [0, -0.2, 0, 1],
+    [0, 0, -1, 0],
+    [0, 0, 0, 1]
+  )
+
+  assert_kind_of Mat4, value
+  assert_false value.identity?
+
+  assert_equal expected, value
+end
+
+assert 'orthogonal_2d' do
+  value = Mat4.orthogonal_2d(0, 10, 0, 10, -1, 1)
+  expected = Mat4.new(
+    [0.2, 0, 0, -1],
+    [0, -0.2, 0, 1],
+    [0, 0, -1, 0],
+    [0, 0, 0, 1]
+  )
+
+  assert_kind_of Mat4, value
+  assert_false value.identity?
+
+  assert_equal expected, value
+end

@@ -540,6 +540,78 @@ mat4_plus(mrb_state* mrb, mrb_value self)
   return mat4_wrap(mrb, matrix);
 }
 
+mrb_value
+mat4_orthogonal(mrb_state* mrb, mrb_value self)
+{
+  mrb_value left_value, right_value, top_value, bottom_value, near_value, far_value;
+  mrb_get_args(mrb, "ffffff", &left_value, &right_value, &top_value, &bottom_value, &near_value, &far_value);
+  mrb_float left = mrb_float(left_value);
+  mrb_float right = mrb_float(right_value);
+  mrb_float top = mrb_float(top_value);
+  mrb_float bottom = mrb_float(bottom_value);
+  mrb_float near = mrb_float(near_value);
+  mrb_float far = mrb_float(far_value);
+
+  struct mat4* matrix = allocate_new_mat4(mrb);
+  matrix->f11 = 2.0f / (right - left);
+  matrix->f12 = 0.0f;
+  matrix->f13 = 0.0f;
+  matrix->f14 = (left + right) / (left - right);
+
+  matrix->f21 = 0.0f;
+  matrix->f22 = 2.0f / (top - bottom);
+  matrix->f23 = 0.0f;
+  matrix->f24 = (bottom + top) / (bottom - top);
+
+  matrix->f31 = 0.0f;
+  matrix->f32 = 0.0f;
+  matrix->f33 = 2.0f / (near - far);
+  matrix->f34 = (near + far) / (near - far);
+
+  matrix->f41 = 0.0f;
+  matrix->f42 = 0.0f;
+  matrix->f43 = 0.0f;
+  matrix->f44 = 1.0f;
+
+  return mat4_wrap(mrb, matrix);
+}
+
+mrb_value
+mat4_orthogonal_2d(mrb_state* mrb, mrb_value self)
+{
+  mrb_value left_value, right_value, top_value, bottom_value, near_value, far_value;
+  mrb_get_args(mrb, "ffffff", &left_value, &right_value, &top_value, &bottom_value, &near_value, &far_value);
+  mrb_float left = mrb_float(left_value);
+  mrb_float right = mrb_float(right_value);
+  mrb_float top = mrb_float(top_value);
+  mrb_float bottom = mrb_float(bottom_value);
+  mrb_float near = mrb_float(near_value);
+  mrb_float far = mrb_float(far_value);
+
+  struct mat4* matrix = allocate_new_mat4(mrb);
+  matrix->f11 = 2.0f / (right - left);
+  matrix->f12 = 0.0f;
+  matrix->f13 = 0.0f;
+  matrix->f14 = (left + right) / (left - right);
+
+  matrix->f21 = 0.0f;
+  matrix->f22 = 2.0f / (top - bottom);
+  matrix->f23 = 0.0f;
+  matrix->f24 = (bottom + top) / (bottom - top);
+
+  matrix->f31 = 0.0f;
+  matrix->f32 = 0.0f;
+  matrix->f33 = -1.0f;
+  matrix->f34 = 0.0f;
+
+  matrix->f41 = 0.0f;
+  matrix->f42 = 0.0f;
+  matrix->f43 = 0.0f;
+  matrix->f44 = 1.0f;
+
+  return mat4_wrap(mrb, matrix);
+}
+
 void init_mat4(mrb_state* mrb)
 {
   mrb_mat4_class = mrb_define_class(mrb, "Mat4", mrb->object_class);
@@ -577,4 +649,6 @@ void init_mat4(mrb_state* mrb)
   // mrb_define_method(mrb, mrb_vec2_class, "add", vec2_plus, ARGS_REQ(1));
   // mrb_define_method(mrb, mrb_vec2_class, "add!", vec2_plus_inplace, ARGS_REQ(1));
 
+  mrb_define_class_method(mrb, mrb_mat4_class, "orthogonal", mat4_orthogonal, ARGS_REQ(6));
+  mrb_define_class_method(mrb, mrb_mat4_class, "orthogonal_2d", mat4_orthogonal, ARGS_REQ(6));
 }
