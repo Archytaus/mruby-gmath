@@ -1,5 +1,6 @@
 #include "mrb_mat4.h"
 
+#include <string.h>
 #include <math.h>
 
 #include <mruby.h>
@@ -141,97 +142,97 @@ mat4_initialize(mrb_state *mrb, mrb_value self)
 mrb_value
 mat4_get_f11(mrb_state* mrb, mrb_value self) {
   mat4* value = mat4_get_ptr(mrb, self);
-  return mrb_float_value(value->f11);
+  return mrb_float_value(mrb, value->f11);
 }
 
 mrb_value
 mat4_get_f12(mrb_state* mrb, mrb_value self) {
   mat4* value = mat4_get_ptr(mrb, self);
-  return mrb_float_value(value->f12);
+  return mrb_float_value(mrb, value->f12);
 }
 
 mrb_value
 mat4_get_f13(mrb_state* mrb, mrb_value self) {
   mat4* value = mat4_get_ptr(mrb, self);
-  return mrb_float_value(value->f13);
+  return mrb_float_value(mrb, value->f13);
 }
 
 mrb_value
 mat4_get_f14(mrb_state* mrb, mrb_value self) {
   mat4* value = mat4_get_ptr(mrb, self);
-  return mrb_float_value(value->f14);
+  return mrb_float_value(mrb, value->f14);
 }
 
 mrb_value
 mat4_get_f21(mrb_state* mrb, mrb_value self) {
   mat4* value = mat4_get_ptr(mrb, self);
-  return mrb_float_value(value->f21);
+  return mrb_float_value(mrb, value->f21);
 }
 
 mrb_value
 mat4_get_f22(mrb_state* mrb, mrb_value self) {
   mat4* value = mat4_get_ptr(mrb, self);
-  return mrb_float_value(value->f22);
+  return mrb_float_value(mrb, value->f22);
 }
 
 mrb_value
 mat4_get_f23(mrb_state* mrb, mrb_value self) {
   mat4* value = mat4_get_ptr(mrb, self);
-  return mrb_float_value(value->f23);
+  return mrb_float_value(mrb, value->f23);
 }
 
 mrb_value
 mat4_get_f24(mrb_state* mrb, mrb_value self) {
   mat4* value = mat4_get_ptr(mrb, self);
-  return mrb_float_value(value->f24);
+  return mrb_float_value(mrb, value->f24);
 }
 
 mrb_value
 mat4_get_f31(mrb_state* mrb, mrb_value self) {
   mat4* value = mat4_get_ptr(mrb, self);
-  return mrb_float_value(value->f31);
+  return mrb_float_value(mrb, value->f31);
 }
 
 mrb_value
 mat4_get_f32(mrb_state* mrb, mrb_value self) {
   mat4* value = mat4_get_ptr(mrb, self);
-  return mrb_float_value(value->f32);
+  return mrb_float_value(mrb, value->f32);
 }
 
 mrb_value
 mat4_get_f33(mrb_state* mrb, mrb_value self) {
   mat4* value = mat4_get_ptr(mrb, self);
-  return mrb_float_value(value->f33);
+  return mrb_float_value(mrb, value->f33);
 }
 
 mrb_value
 mat4_get_f34(mrb_state* mrb, mrb_value self) {
   mat4* value = mat4_get_ptr(mrb, self);
-  return mrb_float_value(value->f34);
+  return mrb_float_value(mrb, value->f34);
 }
 
 mrb_value
 mat4_get_f41(mrb_state* mrb, mrb_value self) {
   mat4* value = mat4_get_ptr(mrb, self);
-  return mrb_float_value(value->f41);
+  return mrb_float_value(mrb, value->f41);
 }
 
 mrb_value
 mat4_get_f42(mrb_state* mrb, mrb_value self) {
   mat4* value = mat4_get_ptr(mrb, self);
-  return mrb_float_value(value->f42);
+  return mrb_float_value(mrb, value->f42);
 }
 
 mrb_value
 mat4_get_f43(mrb_state* mrb, mrb_value self) {
   mat4* value = mat4_get_ptr(mrb, self);
-  return mrb_float_value(value->f43);
+  return mrb_float_value(mrb, value->f43);
 }
 
 mrb_value
 mat4_get_f44(mrb_state* mrb, mrb_value self) {
   mat4* value = mat4_get_ptr(mrb, self);
-  return mrb_float_value(value->f44);
+  return mrb_float_value(mrb, value->f44);
 }
 
 mrb_value 
