@@ -298,7 +298,7 @@ mrb_value vec2_initialize(mrb_state *mrb, mrb_value self)
   {
     tm = create_new_vec2(mrb, 0, 0);
   }
-  if (n == 1)
+  else if (n == 1)
   {
     tm = create_new_vec2(mrb, x, x);
   }

@@ -20,7 +20,7 @@ extern const mat4 mat4_identity_const;
 void mat4_free(mrb_state *mrb, void *p);
 
 void init_mat4(mrb_state* mrb);
-mrb_value mat4_wrap(mrb_state *mrb, struct RClass *tc, struct mat4* tm);
+mrb_value mat4_wrap(mrb_state *mrb, struct mat4* tm);
 struct mat4* mat4_get_ptr(mrb_state* mrb, mrb_value value);
 
 #endif
