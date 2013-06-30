@@ -557,21 +557,21 @@ mat4_orthogonal(mrb_state* mrb, mrb_value self)
   matrix->f11 = 2.0f / (right - left);
   matrix->f12 = 0.0f;
   matrix->f13 = 0.0f;
-  matrix->f14 = (left + right) / (left - right);
+  matrix->f14 = 0.0f;
 
   matrix->f21 = 0.0f;
   matrix->f22 = 2.0f / (top - bottom);
   matrix->f23 = 0.0f;
-  matrix->f24 = (bottom + top) / (bottom - top);
+  matrix->f24 = 0.0f;
 
   matrix->f31 = 0.0f;
   matrix->f32 = 0.0f;
-  matrix->f33 = 2.0f / (near - far);
-  matrix->f34 = (near + far) / (near - far);
+  matrix->f33 = -2.0f / (near - far);
+  matrix->f34 = 0.0f;
 
-  matrix->f41 = 0.0f;
-  matrix->f42 = 0.0f;
-  matrix->f43 = 0.0f;
+  matrix->f41 = (right + left) / (right - left);
+  matrix->f42 = (top + bottom) / (top - bottom);
+  matrix->f43 = (far + near) / (far - near);
   matrix->f44 = 1.0f;
 
   return mat4_wrap(mrb, matrix);
@@ -593,20 +593,20 @@ mat4_orthogonal_2d(mrb_state* mrb, mrb_value self)
   matrix->f11 = 2.0f / (right - left);
   matrix->f12 = 0.0f;
   matrix->f13 = 0.0f;
-  matrix->f14 = (left + right) / (left - right);
+  matrix->f14 = 0.0f;
 
   matrix->f21 = 0.0f;
   matrix->f22 = 2.0f / (top - bottom);
   matrix->f23 = 0.0f;
-  matrix->f24 = (bottom + top) / (bottom - top);
+  matrix->f24 = 0.0f;
 
   matrix->f31 = 0.0f;
   matrix->f32 = 0.0f;
   matrix->f33 = -1.0f;
   matrix->f34 = 0.0f;
 
-  matrix->f41 = 0.0f;
-  matrix->f42 = 0.0f;
+  matrix->f41 = (left + right) / (left - right);
+  matrix->f42 = (bottom + top) / (bottom - top);
   matrix->f43 = 0.0f;
   matrix->f44 = 1.0f;
 
@@ -651,5 +651,5 @@ void init_mat4(mrb_state* mrb)
   // mrb_define_method(mrb, mrb_vec2_class, "add!", vec2_plus_inplace, ARGS_REQ(1));
 
   mrb_define_class_method(mrb, mrb_mat4_class, "orthogonal", mat4_orthogonal, ARGS_REQ(6));
-  mrb_define_class_method(mrb, mrb_mat4_class, "orthogonal_2d", mat4_orthogonal, ARGS_REQ(6));
+  mrb_define_class_method(mrb, mrb_mat4_class, "orthogonal_2d", mat4_orthogonal_2d, ARGS_REQ(6));
 }
