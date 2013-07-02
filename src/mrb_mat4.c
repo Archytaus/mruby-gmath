@@ -8,6 +8,8 @@
 #include <mruby/data.h>
 #include <mruby/array.h>
 
+#include "mrb_vec2.h"
+
 const mat4 mat4_identity_const = { 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f };
 
 static struct RClass* mrb_mat4_class = NULL;
@@ -613,6 +615,177 @@ mat4_orthogonal_2d(mrb_state* mrb, mrb_value self)
   return mat4_wrap(mrb, matrix);
 }
 
+mrb_value
+mat4_transform_vec2(mrb_state* mrb, mat4* m, struct vec2* v) {
+  return wrap_new_vec2(mrb, v->x * m->f11 + v->y * m->f21 + 1 * m->f41, v->x * m->f12 + v->y * m->f22 + 1 * m->f42);
+}
+
+mrb_value
+mat4_transform(mrb_state* mrb, mrb_value self)
+{
+  mrb_value vector;
+  mrb_get_args(mrb, "o", &vector);
+
+  char* vector_class = mrb_obj_classname(mrb, vector);
+  mat4* selfValue = mat4_get_ptr(mrb, self);
+
+  if (strcmp(vector_class, "Vec2") == 0) {
+    return mat4_transform_vec2(mrb, selfValue, vec2_get_ptr(mrb, vector));
+  }
+  
+  return mrb_nil_value();
+}
+
+mrb_value
+mat4_invert(mrb_state* mrb, mrb_value self)
+{
+  float det;
+  int i; 
+
+  mat4* m = mat4_get_ptr(mrb, self);
+  mat4 inv;
+
+  inv.f11 = m->f22  * m->f33 * m->f44 - 
+             m->f22  * m->f34 * m->f43 - 
+             m->f32  * m->f23  * m->f44 + 
+             m->f32  * m->f24  * m->f43 +
+             m->f42 * m->f23  * m->f34 - 
+             m->f42 * m->f24  * m->f33;
+
+  inv.f21 = -m->f21  * m->f33 * m->f44 + 
+            m->f21  * m->f34 * m->f43 + 
+            m->f31  * m->f23  * m->f44 - 
+            m->f31  * m->f24  * m->f43 - 
+            m->f41 * m->f23  * m->f34 + 
+            m->f41 * m->f24  * m->f33;
+
+  inv.f31 = m->f21  * m->f32 * m->f44 - 
+           m->f21  * m->f34 * m->f42 - 
+           m->f31  * m->f22 * m->f44 + 
+           m->f31  * m->f24 * m->f42 + 
+           m->f41 * m->f22 * m->f34 - 
+           m->f41 * m->f24 * m->f32;
+
+  inv.f41 = -m->f21  * m->f32 * m->f43 + 
+             m->f21  * m->f33 * m->f42 +
+             m->f31  * m->f22 * m->f43 - 
+             m->f31  * m->f23 * m->f42 - 
+             m->f41 * m->f22 * m->f33 + 
+             m->f41 * m->f23 * m->f32;
+
+  inv.f12 = -m->f12  * m->f33 * m->f44 + 
+            m->f12  * m->f34 * m->f43 + 
+            m->f32  * m->f13 * m->f44 - 
+            m->f32  * m->f14 * m->f43 - 
+            m->f42 * m->f13 * m->f34 + 
+            m->f42 * m->f14 * m->f33;
+
+  inv.f22 = m->f11  * m->f33 * m->f44 - 
+           m->f11  * m->f34 * m->f43 - 
+           m->f31  * m->f13 * m->f44 + 
+           m->f31  * m->f14 * m->f43 + 
+           m->f41 * m->f13 * m->f34 - 
+           m->f41 * m->f14 * m->f33;
+
+  inv.f32 = -m->f11  * m->f32 * m->f44 + 
+            m->f11  * m->f34 * m->f42 + 
+            m->f31  * m->f12 * m->f44 - 
+            m->f31  * m->f14 * m->f42 - 
+            m->f41 * m->f12 * m->f34 + 
+            m->f41 * m->f14 * m->f32;
+
+  inv.f42 = m->f11  * m->f32 * m->f43 - 
+            m->f11  * m->f33 * m->f42 - 
+            m->f31  * m->f12 * m->f43 + 
+            m->f31  * m->f13 * m->f42 + 
+            m->f41 * m->f12 * m->f33 - 
+            m->f41 * m->f13 * m->f32;
+
+  inv.f13 = m->f12  * m->f23 * m->f44 - 
+           m->f12  * m->f24 * m->f43 - 
+           m->f22  * m->f13 * m->f44 + 
+           m->f22  * m->f14 * m->f43 + 
+           m->f42 * m->f13 * m->f24 - 
+           m->f42 * m->f14 * m->f23;
+
+  inv.f23 = -m->f11  * m->f23 * m->f44 + 
+            m->f11  * m->f24 * m->f43 + 
+            m->f21  * m->f13 * m->f44 - 
+            m->f21  * m->f14 * m->f43 - 
+            m->f41 * m->f13 * m->f24 + 
+            m->f41 * m->f14 * m->f23;
+
+  inv.f33 = m->f11  * m->f22 * m->f44 - 
+            m->f11  * m->f24 * m->f42 - 
+            m->f21  * m->f12 * m->f44 + 
+            m->f21  * m->f14 * m->f42 + 
+            m->f41 * m->f12 * m->f24 - 
+            m->f41 * m->f14 * m->f22;
+
+  inv.f43 = -m->f11  * m->f22 * m->f43 + 
+             m->f11  * m->f23 * m->f42 + 
+             m->f21  * m->f12 * m->f43 - 
+             m->f21  * m->f13 * m->f42 - 
+             m->f41 * m->f12 * m->f23 + 
+             m->f41 * m->f13 * m->f22;
+
+  inv.f14 = -m->f12 * m->f23 * m->f34 + 
+            m->f12 * m->f24 * m->f33 + 
+            m->f22 * m->f13 * m->f34 - 
+            m->f22 * m->f14 * m->f33 - 
+            m->f32 * m->f13 * m->f24 + 
+            m->f32 * m->f14 * m->f23;
+
+  inv.f24 = m->f11 * m->f23 * m->f34 - 
+           m->f11 * m->f24 * m->f33 - 
+           m->f21 * m->f13 * m->f34 + 
+           m->f21 * m->f14 * m->f33 + 
+           m->f31 * m->f13 * m->f24 - 
+           m->f31 * m->f14 * m->f23;
+
+  inv.f34 = -m->f11 * m->f22 * m->f34 + 
+             m->f11 * m->f24 * m->f32 + 
+             m->f21 * m->f12 * m->f34 - 
+             m->f21 * m->f14 * m->f32 - 
+             m->f31 * m->f12 * m->f24 + 
+             m->f31 * m->f14 * m->f22;
+
+  inv.f44 = m->f11 * m->f22 * m->f33 - 
+            m->f11 * m->f23 * m->f32 - 
+            m->f21 * m->f12 * m->f33 + 
+            m->f21 * m->f13 * m->f32 + 
+            m->f31 * m->f12 * m->f23 - 
+            m->f31 * m->f13 * m->f22;
+
+  det = m->f11 * inv.f11 + m->f12 * inv.f21 + m->f13 * inv.f31 + m->f14 * inv.f41;
+
+  if (det == 0)
+    return self;
+
+  det = 1.0 / det;
+
+  inv.f11 *= det;
+  inv.f12 *= det;
+  inv.f13 *= det;
+  inv.f14 *= det;
+  inv.f21 *= det;
+  inv.f22 *= det;
+  inv.f23 *= det;
+  inv.f24 *= det;
+  inv.f31 *= det;
+  inv.f32 *= det;
+  inv.f33 *= det;
+  inv.f34 *= det;
+  inv.f41 *= det;
+  inv.f42 *= det;
+  inv.f43 *= det;
+  inv.f44 *= det;
+  
+  memcpy(m, &inv, sizeof(mat4));
+
+  return self;
+}
+
 void init_mat4(mrb_state* mrb)
 {
   mrb_mat4_class = mrb_define_class(mrb, "Mat4", mrb->object_class);
@@ -649,6 +822,9 @@ void init_mat4(mrb_state* mrb)
   mrb_define_method(mrb, mrb_mat4_class, "+", mat4_plus, ARGS_REQ(1));
   // mrb_define_method(mrb, mrb_vec2_class, "add", vec2_plus, ARGS_REQ(1));
   // mrb_define_method(mrb, mrb_vec2_class, "add!", vec2_plus_inplace, ARGS_REQ(1));
+
+  mrb_define_method(mrb, mrb_mat4_class, "transform", mat4_transform, ARGS_REQ(1));
+  mrb_define_method(mrb, mrb_mat4_class, "invert", mat4_invert, ARGS_NONE());
 
   mrb_define_class_method(mrb, mrb_mat4_class, "orthogonal", mat4_orthogonal, ARGS_REQ(6));
   mrb_define_class_method(mrb, mrb_mat4_class, "orthogonal_2d", mat4_orthogonal_2d, ARGS_REQ(6));
