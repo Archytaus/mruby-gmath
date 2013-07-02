@@ -433,7 +433,7 @@ mrb_value
 mat4_equals(mrb_state *mrb, mrb_value self)
 {
   mrb_value new_value;
-  int args = mrb_get_args(mrb, "o", &new_value);
+  mrb_get_args(mrb, "o", &new_value);
   struct mat4* arg = mat4_get_ptr(mrb, new_value);
   struct mat4* value = mat4_get_ptr(mrb, self);
 
@@ -513,7 +513,7 @@ mrb_value
 mat4_plus(mrb_state* mrb, mrb_value self)
 {
   mrb_value new_value;
-  int args = mrb_get_args(mrb, "o", &new_value);
+  mrb_get_args(mrb, "o", &new_value);
   struct mat4* arg = mat4_get_ptr(mrb, new_value);
   struct mat4* value = mat4_get_ptr(mrb, self);
 
@@ -582,14 +582,12 @@ mat4_orthogonal(mrb_state* mrb, mrb_value self)
 mrb_value
 mat4_orthogonal_2d(mrb_state* mrb, mrb_value self)
 {
-  mrb_value left_value, right_value, top_value, bottom_value, near_value, far_value;
-  mrb_get_args(mrb, "ffffff", &left_value, &right_value, &top_value, &bottom_value, &near_value, &far_value);
+  mrb_value left_value, right_value, top_value, bottom_value;
+  mrb_get_args(mrb, "ffff", &left_value, &right_value, &top_value, &bottom_value);
   mrb_float left = mrb_float(left_value);
   mrb_float right = mrb_float(right_value);
   mrb_float top = mrb_float(top_value);
   mrb_float bottom = mrb_float(bottom_value);
-  mrb_float near = mrb_float(near_value);
-  mrb_float far = mrb_float(far_value);
 
   struct mat4* matrix = allocate_new_mat4(mrb);
   matrix->f11 = 2.0f / (right - left);
@@ -626,7 +624,7 @@ mat4_transform(mrb_state* mrb, mrb_value self)
   mrb_value vector;
   mrb_get_args(mrb, "o", &vector);
 
-  char* vector_class = mrb_obj_classname(mrb, vector);
+  const char* vector_class = mrb_obj_classname(mrb, vector);
   mat4* selfValue = mat4_get_ptr(mrb, self);
 
   if (strcmp(vector_class, "Vec2") == 0) {
@@ -636,13 +634,9 @@ mat4_transform(mrb_state* mrb, mrb_value self)
   return mrb_nil_value();
 }
 
-mrb_value
-mat4_invert(mrb_state* mrb, mrb_value self)
+mat4 
+generate_inverse(mat4* m)
 {
-  float det;
-  int i; 
-
-  mat4* m = mat4_get_ptr(mrb, self);
   mat4 inv;
 
   inv.f11 = m->f22  * m->f33 * m->f44 - 
@@ -757,10 +751,10 @@ mat4_invert(mrb_state* mrb, mrb_value self)
             m->f31 * m->f12 * m->f23 - 
             m->f31 * m->f13 * m->f22;
 
-  det = m->f11 * inv.f11 + m->f12 * inv.f21 + m->f13 * inv.f31 + m->f14 * inv.f41;
+  float det = m->f11 * inv.f11 + m->f12 * inv.f21 + m->f13 * inv.f31 + m->f14 * inv.f41;
 
   if (det == 0)
-    return self;
+    return inv;
 
   det = 1.0 / det;
 
@@ -780,7 +774,30 @@ mat4_invert(mrb_state* mrb, mrb_value self)
   inv.f42 *= det;
   inv.f43 *= det;
   inv.f44 *= det;
-  
+
+  return inv;
+}
+
+mrb_value
+mat4_invert(mrb_state* mrb, mrb_value self)
+{  
+  mat4* m = mat4_get_ptr(mrb, self);
+  mat4* newMatrix = allocate_new_mat4(mrb);
+
+  mat4 inv = generate_inverse(m);
+
+  memcpy(newMatrix, &inv, sizeof(mat4));
+
+  return mat4_wrap(mrb, newMatrix);
+}
+
+mrb_value
+mat4_invert_inplace(mrb_state* mrb, mrb_value self)
+{  
+  mat4* m = mat4_get_ptr(mrb, self);
+
+  mat4 inv = generate_inverse(m);;
+
   memcpy(m, &inv, sizeof(mat4));
 
   return self;
@@ -824,8 +841,10 @@ void init_mat4(mrb_state* mrb)
   // mrb_define_method(mrb, mrb_vec2_class, "add!", vec2_plus_inplace, ARGS_REQ(1));
 
   mrb_define_method(mrb, mrb_mat4_class, "transform", mat4_transform, ARGS_REQ(1));
+
   mrb_define_method(mrb, mrb_mat4_class, "invert", mat4_invert, ARGS_NONE());
+  mrb_define_method(mrb, mrb_mat4_class, "invert!", mat4_invert_inplace, ARGS_NONE());
 
   mrb_define_class_method(mrb, mrb_mat4_class, "orthogonal", mat4_orthogonal, ARGS_REQ(6));
-  mrb_define_class_method(mrb, mrb_mat4_class, "orthogonal_2d", mat4_orthogonal_2d, ARGS_REQ(6));
+  mrb_define_class_method(mrb, mrb_mat4_class, "orthogonal_2d", mat4_orthogonal_2d, ARGS_REQ(4));
 }

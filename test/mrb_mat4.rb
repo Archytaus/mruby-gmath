@@ -79,7 +79,7 @@ assert 'orthogonal' do
 end
 
 assert 'orthogonal_2d' do
-  value = Mat4.orthogonal_2d(0, 10, 0, 10, -1, 1)
+  value = Mat4.orthogonal_2d(0, 10, 0, 10)
   expected = Mat4.new(
     [0.2, 0, 0, -1],
     [0, -0.2, 0, 1],
