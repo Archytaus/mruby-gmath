@@ -40,12 +40,12 @@ vec2_wrap(mrb_state *mrb, struct RClass *tc, struct vec2* tm)
 struct vec2*
 vec2_get_ptr(mrb_state* mrb, mrb_value value)
 {
-  return (struct vec2*)mrb_data_get_ptr(mrb, value, &vec2_type);
+  return DATA_CHECK_GET_PTR(mrb, value, &vec2_type, struct vec2);
 }
 
 mrb_value vec2_get_x(mrb_state* mrb, mrb_value self)
 {
-  struct vec2 *vec = (struct vec2*)mrb_data_get_ptr(mrb, self, &vec2_type);
+  struct vec2 *vec = vec2_get_ptr(mrb, self);
 
   return mrb_float_value(mrb, vec->x);
 }
@@ -55,7 +55,7 @@ mrb_value vec2_set_x(mrb_state* mrb, mrb_value self)
   mrb_value new_value;
   mrb_get_args(mrb, "f", &new_value);
 
-  struct vec2 *vec = (struct vec2*)mrb_data_get_ptr(mrb, self, &vec2_type);
+  struct vec2 *vec = vec2_get_ptr(mrb, self);
   vec->x = mrb_float(new_value);
 
   return new_value;
@@ -63,7 +63,7 @@ mrb_value vec2_set_x(mrb_state* mrb, mrb_value self)
 
 mrb_value vec2_get_y(mrb_state* mrb, mrb_value self)
 {
-  struct vec2 *vec = (struct vec2*)mrb_data_get_ptr(mrb, self, &vec2_type);
+  struct vec2 *vec = vec2_get_ptr(mrb, self);
 
   return mrb_float_value(mrb, vec->y);
 }
@@ -73,7 +73,7 @@ mrb_value vec2_set_y(mrb_state* mrb, mrb_value self)
   mrb_value new_value;
   mrb_get_args(mrb, "f", &new_value);
 
-  struct vec2 *vec = (struct vec2*)mrb_data_get_ptr(mrb, self, &vec2_type);
+  struct vec2 *vec = vec2_get_ptr(mrb, self);
   vec->y = mrb_float(new_value);
 
   return new_value;
@@ -83,8 +83,8 @@ mrb_value vec2_equals(mrb_state* mrb, mrb_value self)
 {
   mrb_value new_value;
   mrb_get_args(mrb, "o", &new_value);
-  struct vec2* arg =(struct vec2*)mrb_data_get_ptr(mrb, new_value, &vec2_type);
-  struct vec2* selfValue = (struct vec2*)mrb_data_get_ptr(mrb, self, &vec2_type);
+  struct vec2 *arg = vec2_get_ptr(mrb, new_value);
+  struct vec2 *selfValue = vec2_get_ptr(mrb, self);
 
   if (!arg) return mrb_nil_value();
 
@@ -97,8 +97,8 @@ mrb_value vec2_plus(mrb_state* mrb, mrb_value self)
 {
   mrb_value new_value;
   mrb_get_args(mrb, "o", &new_value);
-  struct vec2* arg = (struct vec2*)mrb_data_get_ptr(mrb, new_value, &vec2_type);
-  struct vec2* selfValue = (struct vec2*)mrb_data_get_ptr(mrb, self, &vec2_type);
+  struct vec2 *arg = vec2_get_ptr(mrb, new_value);
+  struct vec2 *selfValue = vec2_get_ptr(mrb, self);
 
   if (!arg) return mrb_nil_value();
 
@@ -111,8 +111,8 @@ mrb_value vec2_plus_inplace(mrb_state* mrb, mrb_value self)
 {
   mrb_value new_value;
   mrb_get_args(mrb, "o", &new_value);
-  struct vec2* arg =(struct vec2*)mrb_data_get_ptr(mrb, new_value, &vec2_type);
-  struct vec2* selfValue = (struct vec2*)mrb_data_get_ptr(mrb, self, &vec2_type);
+  struct vec2 *arg = vec2_get_ptr(mrb, new_value);
+  struct vec2 *selfValue = vec2_get_ptr(mrb, self);
 
   if (!arg) return mrb_nil_value();
 
@@ -125,8 +125,8 @@ mrb_value vec2_subtract(mrb_state* mrb, mrb_value self)
 {
   mrb_value new_value;
   mrb_get_args(mrb, "o", &new_value);
-  struct vec2* arg =(struct vec2*)mrb_data_get_ptr(mrb, new_value, &vec2_type);
-  struct vec2* selfValue = (struct vec2*)mrb_data_get_ptr(mrb, self, &vec2_type);
+  struct vec2 *arg = vec2_get_ptr(mrb, new_value);
+  struct vec2 *selfValue = vec2_get_ptr(mrb, self);
 
   if (!arg) return mrb_nil_value();
 
@@ -139,8 +139,8 @@ mrb_value vec2_subtract_inplace(mrb_state* mrb, mrb_value self)
 {
   mrb_value new_value;
   mrb_get_args(mrb, "o", &new_value);
-  struct vec2* arg =(struct vec2*)mrb_data_get_ptr(mrb, new_value, &vec2_type);
-  struct vec2* selfValue = (struct vec2*)mrb_data_get_ptr(mrb, self, &vec2_type);
+  struct vec2 *arg = vec2_get_ptr(mrb, new_value);
+  struct vec2 *selfValue = vec2_get_ptr(mrb, self);
 
   if (!arg) return mrb_nil_value();
 
@@ -151,7 +151,7 @@ mrb_value vec2_subtract_inplace(mrb_state* mrb, mrb_value self)
 
 mrb_value vec2_usubtract(mrb_state* mrb, mrb_value self)
 {
-  struct vec2* selfValue = (struct vec2*)mrb_data_get_ptr(mrb, self, &vec2_type);
+  struct vec2 *selfValue = vec2_get_ptr(mrb, self);
 
   if (!selfValue) return mrb_nil_value();
 
@@ -162,7 +162,7 @@ mrb_value vec2_usubtract(mrb_state* mrb, mrb_value self)
 
 mrb_value vec2_usubtract_inplace(mrb_state* mrb, mrb_value self)
 {
-  struct vec2* selfValue = (struct vec2*)mrb_data_get_ptr(mrb, self, &vec2_type);
+  struct vec2 *selfValue = vec2_get_ptr(mrb, self);
 
   if (!selfValue) return mrb_nil_value();
 
@@ -173,11 +173,10 @@ mrb_value vec2_usubtract_inplace(mrb_state* mrb, mrb_value self)
 
 mrb_value vec2_times(mrb_state* mrb, mrb_value self)
 {
-  struct vec2* selfValue = (struct vec2*)mrb_data_get_ptr(mrb, self, &vec2_type);
-
   mrb_value new_value;
   mrb_get_args(mrb, "o", &new_value);
-  struct vec2* arg =(struct vec2*)mrb_data_get_ptr(mrb, new_value, &vec2_type);
+  struct vec2 *arg = vec2_get_ptr(mrb, new_value);
+  struct vec2 *selfValue = vec2_get_ptr(mrb, self);
 
   if (arg)
   {
@@ -200,11 +199,10 @@ mrb_value vec2_times(mrb_state* mrb, mrb_value self)
 
 mrb_value vec2_times_inplace(mrb_state* mrb, mrb_value self)
 {
-  struct vec2* selfValue = (struct vec2*)mrb_data_get_ptr(mrb, self, &vec2_type);
-
   mrb_value new_value;
   mrb_get_args(mrb, "o", &new_value);
-  struct vec2* arg =(struct vec2*)mrb_data_get_ptr(mrb, new_value, &vec2_type);
+  struct vec2 *arg = vec2_get_ptr(mrb, new_value);
+  struct vec2 *selfValue = vec2_get_ptr(mrb, self);
 
   if (arg)
   {
@@ -227,11 +225,10 @@ mrb_value vec2_times_inplace(mrb_state* mrb, mrb_value self)
 
 mrb_value vec2_divide(mrb_state* mrb, mrb_value self)
 {
-  struct vec2* selfValue = (struct vec2*)mrb_data_get_ptr(mrb, self, &vec2_type);
-
   mrb_value new_value;
   mrb_get_args(mrb, "o", &new_value);
-  struct vec2* arg =(struct vec2*)mrb_data_get_ptr(mrb, new_value, &vec2_type);
+  struct vec2 *arg = vec2_get_ptr(mrb, new_value);
+  struct vec2 *selfValue = vec2_get_ptr(mrb, self);
 
   if (arg)
   {
@@ -254,11 +251,10 @@ mrb_value vec2_divide(mrb_state* mrb, mrb_value self)
 
 mrb_value vec2_divide_inplace(mrb_state* mrb, mrb_value self)
 {
-  struct vec2* selfValue = (struct vec2*)mrb_data_get_ptr(mrb, self, &vec2_type);
-
   mrb_value new_value;
   mrb_get_args(mrb, "o", &new_value);
-  struct vec2* arg =(struct vec2*)mrb_data_get_ptr(mrb, new_value, &vec2_type);
+  struct vec2 *arg = vec2_get_ptr(mrb, new_value);
+  struct vec2 *selfValue = vec2_get_ptr(mrb, self);
 
   if (arg)
   {
@@ -318,7 +314,7 @@ mrb_float vec2_calc_length(struct vec2* vector)
 
 mrb_value vec2_normalize(mrb_state* mrb, mrb_value self)
 {
-  struct vec2* selfValue = (struct vec2*)mrb_data_get_ptr(mrb, self, &vec2_type);
+  struct vec2 *selfValue = vec2_get_ptr(mrb, self);
   mrb_float length = vec2_calc_length(selfValue);
 
   return wrap_new_vec2(mrb, 
@@ -328,7 +324,7 @@ mrb_value vec2_normalize(mrb_state* mrb, mrb_value self)
 
 mrb_value vec2_normalize_inplace(mrb_state* mrb, mrb_value self)
 {
-  struct vec2* selfValue = (struct vec2*)mrb_data_get_ptr(mrb, self, &vec2_type);
+  struct vec2 *selfValue = vec2_get_ptr(mrb, self);
   
   mrb_float length = vec2_calc_length(selfValue);
   selfValue->x /= length;
@@ -339,7 +335,7 @@ mrb_value vec2_normalize_inplace(mrb_state* mrb, mrb_value self)
 
 mrb_value vec2_length(mrb_state* mrb, mrb_value self)
 {
-  struct vec2* selfValue = (struct vec2*)mrb_data_get_ptr(mrb, self, &vec2_type);
+  struct vec2 *selfValue = vec2_get_ptr(mrb, self);
 
   return mrb_float_value(mrb, vec2_calc_length(selfValue));
 }
@@ -355,8 +351,8 @@ mrb_value vec2_distance(mrb_state* mrb, mrb_value self)
 {
   mrb_value new_value;
   int args = mrb_get_args(mrb, "o", &new_value);
-  struct vec2* arg =(struct vec2*)mrb_data_get_ptr(mrb, new_value, &vec2_type);
-  struct vec2* selfValue = (struct vec2*)mrb_data_get_ptr(mrb, self, &vec2_type);
+  struct vec2 *arg = vec2_get_ptr(mrb, new_value);
+  struct vec2 *selfValue = vec2_get_ptr(mrb, self);
 
   if (!arg) return mrb_nil_value();
 
@@ -372,8 +368,8 @@ mrb_value vec2_dot(mrb_state* mrb, mrb_value self)
 {
   mrb_value new_value;
   int args = mrb_get_args(mrb, "o", &new_value);
-  struct vec2* arg =(struct vec2*)mrb_data_get_ptr(mrb, new_value, &vec2_type);
-  struct vec2* selfValue = (struct vec2*)mrb_data_get_ptr(mrb, self, &vec2_type);
+  struct vec2 *arg = vec2_get_ptr(mrb, new_value);
+  struct vec2 *selfValue = vec2_get_ptr(mrb, self);
 
   if (!arg) return mrb_nil_value();
 
@@ -385,7 +381,7 @@ mrb_value vec2_inspect(mrb_state* mrb, mrb_value self)
   char buf[256];
   int len;
 
-  struct vec2* selfValue = (struct vec2*)mrb_data_get_ptr(mrb, self, &vec2_type);
+  struct vec2 *selfValue = vec2_get_ptr(mrb, self);
   if (!selfValue) return mrb_nil_value();
 
   len = snprintf(buf, sizeof(buf), "[%.4f,%.4f]",

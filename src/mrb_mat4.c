@@ -36,7 +36,7 @@ mat4_wrap(mrb_state *mrb, struct mat4* tm)
 struct mat4*
 mat4_get_ptr(mrb_state* mrb, mrb_value value)
 {
-  return (struct mat4*)mrb_data_get_ptr(mrb, value, &mat4_type);
+  return DATA_CHECK_GET_PTR(mrb, value, &mat4_type, struct mat4);
 }
 
 struct mat4* 
