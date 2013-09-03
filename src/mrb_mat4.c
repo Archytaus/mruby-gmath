@@ -836,6 +836,26 @@ void init_mat4(mrb_state* mrb)
   mrb_define_method(mrb, mrb_mat4_class, "f43", mat4_get_f43, ARGS_NONE());
   mrb_define_method(mrb, mrb_mat4_class, "f44", mat4_get_f44, ARGS_NONE());
 
+  mrb_define_method(mrb, mrb_mat4_class, "f11=", mat4_set_f11, ARGS_REQ(1));
+  mrb_define_method(mrb, mrb_mat4_class, "f12=", mat4_set_f12, ARGS_REQ(1));
+  mrb_define_method(mrb, mrb_mat4_class, "f13=", mat4_set_f13, ARGS_REQ(1));
+  mrb_define_method(mrb, mrb_mat4_class, "f14=", mat4_set_f14, ARGS_REQ(1));
+
+  mrb_define_method(mrb, mrb_mat4_class, "f21=", mat4_set_f21, ARGS_REQ(1));
+  mrb_define_method(mrb, mrb_mat4_class, "f22=", mat4_set_f22, ARGS_REQ(1));
+  mrb_define_method(mrb, mrb_mat4_class, "f23=", mat4_set_f23, ARGS_REQ(1));
+  mrb_define_method(mrb, mrb_mat4_class, "f24=", mat4_set_f24, ARGS_REQ(1));
+
+  mrb_define_method(mrb, mrb_mat4_class, "f31=", mat4_set_f31, ARGS_REQ(1));
+  mrb_define_method(mrb, mrb_mat4_class, "f32=", mat4_set_f32, ARGS_REQ(1));
+  mrb_define_method(mrb, mrb_mat4_class, "f33=", mat4_set_f33, ARGS_REQ(1));
+  mrb_define_method(mrb, mrb_mat4_class, "f34=", mat4_set_f34, ARGS_REQ(1));
+
+  mrb_define_method(mrb, mrb_mat4_class, "f41=", mat4_set_f41, ARGS_REQ(1));
+  mrb_define_method(mrb, mrb_mat4_class, "f42=", mat4_set_f42, ARGS_REQ(1));
+  mrb_define_method(mrb, mrb_mat4_class, "f43=", mat4_set_f43, ARGS_REQ(1));
+  mrb_define_method(mrb, mrb_mat4_class, "f44=", mat4_set_f44, ARGS_REQ(1));
+
   mrb_define_method(mrb, mrb_mat4_class, "+", mat4_plus, ARGS_REQ(1));
   // mrb_define_method(mrb, mrb_vec2_class, "add", vec2_plus, ARGS_REQ(1));
   // mrb_define_method(mrb, mrb_vec2_class, "add!", vec2_plus_inplace, ARGS_REQ(1));
