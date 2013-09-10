@@ -23,4 +23,10 @@ mrb_value vec4_set_x(mrb_state* mrb, mrb_value self);
 mrb_value vec4_get_y(mrb_state* mrb, mrb_value self);
 mrb_value vec4_set_y(mrb_state* mrb, mrb_value self);
 
+mrb_value vec4_get_z(mrb_state* mrb, mrb_value self);
+mrb_value vec4_set_z(mrb_state* mrb, mrb_value self);
+
+mrb_value vec4_get_w(mrb_state* mrb, mrb_value self);
+mrb_value vec4_set_w(mrb_state* mrb, mrb_value self);
+
 #endif
