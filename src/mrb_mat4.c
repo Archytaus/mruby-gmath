@@ -614,6 +614,43 @@ mat4_orthogonal_2d(mrb_state* mrb, mrb_value self)
 }
 
 mrb_value
+mat4_perspective(mrb_state* mrb, mrb_value self)
+{
+  mrb_value fov_value, aspect_value, near_value, far_value;
+  mrb_get_args(mrb, "ffff", &fov_value, &aspect_value, &near_value, &far_value);
+  mrb_float fov = mrb_float(fov_value);
+  mrb_float aspect_ratio = mrb_float(aspect_value);
+  mrb_float near = mrb_float(near_value);
+  mrb_float far = mrb_float(far_value);
+
+  mrb_float width = 1.0f / tan(fov * 0.5f);
+  mrb_float height = width / aspect_ratio;
+
+  struct mat4* matrix = allocate_new_mat4(mrb);
+  matrix->f11 = width;
+  matrix->f12 = 0.0f;
+  matrix->f13 = 0.0f;
+  matrix->f14 = 0.0f;
+
+  matrix->f21 = 0.0f;
+  matrix->f22 = height;
+  matrix->f23 = 0.0f;
+  matrix->f24 = 0.0f;
+
+  matrix->f31 = 0.0f;
+  matrix->f32 = 0.0f;
+  matrix->f33 = 1.0f / (near - far);
+  matrix->f34 = near / (near - far);
+
+  matrix->f41 = 0.0f;
+  matrix->f42 = 0.0f;
+  matrix->f43 = 0.0f;
+  matrix->f44 = 1.0f;
+
+  return mat4_wrap(mrb, matrix);
+}
+
+mrb_value
 mat4_transform_vec2(mrb_state* mrb, mat4* m, struct vec2* v) {
   return wrap_new_vec2(mrb, v->x * m->f11 + v->y * m->f21 + 1 * m->f41, v->x * m->f12 + v->y * m->f22 + 1 * m->f42);
 }
@@ -867,4 +904,6 @@ void init_mat4(mrb_state* mrb)
 
   mrb_define_class_method(mrb, mrb_mat4_class, "orthogonal", mat4_orthogonal, ARGS_REQ(6));
   mrb_define_class_method(mrb, mrb_mat4_class, "orthogonal_2d", mat4_orthogonal_2d, ARGS_REQ(4));
+
+  mrb_define_class_method(mrb, mrb_mat4_class, "perspective", mat4_perspective, ARGS_REQ(4));
 }
