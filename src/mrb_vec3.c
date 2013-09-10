@@ -426,6 +426,19 @@ mrb_value vec3_inspect(mrb_state* mrb, mrb_value self)
   return mrb_str_new(mrb, buf, len);
 }
 
+mrb_value vec3_cross(mrb_state* mrb, mrb_value self)
+{
+  mrb_value left_value, right_value;
+  int args = mrb_get_args(mrb, "oo", &left_value, &right_value);
+  struct vec3 *left = vec3_get_ptr(mrb, left_value);
+  struct vec3 *right = vec3_get_ptr(mrb, right_value);
+
+  return wrap_new_vec3(mrb, 
+      left->y * right->z - left->z * right->y,
+      left->z * right->x - left->x * right->z,
+      left->x * right->y - left->y * right->x);
+}
+
 void init_vec3(mrb_state* mrb)
 {
   mrb_vec3_class = mrb_define_class(mrb, "Vec3", mrb->object_class);
@@ -474,4 +487,6 @@ void init_vec3(mrb_state* mrb)
 
   mrb_define_method(mrb, mrb_vec3_class, "to_s", vec3_inspect, ARGS_NONE());
   mrb_define_method(mrb, mrb_vec3_class, "inspect", vec3_inspect, ARGS_NONE());
+
+  mrb_define_class_method(mrb, mrb_vec3_class, "cross", vec3_cross, ARGS_REQ(2));
 }
